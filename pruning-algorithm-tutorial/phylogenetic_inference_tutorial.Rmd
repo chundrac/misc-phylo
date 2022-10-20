@@ -17,6 +17,7 @@ require(expm)
 require(phytools)
 require(ggtree)
 require(rstan)
+packageVersion("phytools")
 ```
 
 The following notebook demonstrates some fundamentals of phylogenetic inference. A popular family of phylogenetic models assumes that discrete features evolve according to a continuous-time Markov process, in which transitions between feature values take place according to *transition rates*. The backbone of phylogenetic inference is Felsenstein's Pruning Algorithm, which iteratively computes the likelihood of *transition rates* under a tree topology and cross-linguistic data.
