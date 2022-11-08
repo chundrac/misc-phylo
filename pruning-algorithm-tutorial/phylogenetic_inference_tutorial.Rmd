@@ -149,29 +149,16 @@ We can then set up the Stan code that infers the rates. We make use of the `func
 model_code = "functions {
   //compute transient probability for continuous-time markov process of character evolution,
   //i.e., p(end state|start state, rates, time)
-  real evprob(int x, int y, real z, real a, real b) {
-    real p;
-    if (y==0) {
-      p = b/(a+b);
-      if (x==0) {
-        p = p + a/(a+b)*exp(-(a+b)*z);
-      }
-      if (x==1) {
-        p = p - b/(a+b)*exp(-(a+b)*z);
-      }
-    }
-    if (y==1) {
-      p = a/(a+b);
-      if (x==0) {
-        p = p - a/(a+b)*exp(-(a+b)*z);
-      }
-      if (x==1) {
-        p = p + b/(a+b)*exp(-(a+b)*z);
-      }
-    }
-    return p;
+  matrix evprob(real z, real alpha, real beta) {
+    matrix[2,2] P;
+    P[1,1] = (beta/(alpha+beta)) + (alpha/(alpha+beta)*exp(-(alpha+beta)*z));
+    P[1,2] = (alpha/(alpha+beta)) - (alpha/(alpha+beta)*exp(-(alpha+beta)*z));
+    P[2,1] = (beta/(alpha+beta)) - (beta/(alpha+beta)*exp(-(alpha+beta)*z));
+    P[2,2] = (alpha/(alpha+beta)) + (beta/(alpha+beta)*exp(-(alpha+beta)*z));
+    return P;
   }
-  real pruning_likelihood(int T, int N, int B, int[,] tiplik, int[] parent, int[] child, real[] brlen, real alpha, real beta) {
+  //compute likelihood via Felsenstein's Pruning Algorithm
+  real pruning_likelihood(int T, int N, int B, int[] child, int[] parent, real[] brlen, matrix tiplik, real alpha, real beta) {
   matrix[N,2] lambda;
   for (t in 1:T) {                      //put tip log likelihoods into matrix
     lambda[t,1] = log(tiplik[t,1]);
@@ -181,13 +168,13 @@ model_code = "functions {
     lambda[n,1] = 0;
     lambda[n,2] = 0;
   }
-  for (b in 1:B) {                      //for each branch (arranged for post-order traversal)
-    lambda[parent[b],1] += log(evprob(0,0,alpha,beta,brlen[b])*exp(lambda[child[b],1])
-     + evprob(0,1,alpha,beta,brlen[b])*exp(lambda[child[b],2]));
-    lambda[parent[b],2] += log(evprob(1,0,alpha,beta,brlen[b])*exp(lambda[child[b],1])
-     + evprob(1,1,alpha,beta,brlen[b])*exp(lambda[child[b],2]));
+    for (b in 1:B) {
+      matrix[2,2] P = evprob(brlen[b], alpha, beta); //via matrix exponentiation
+      for (d in 1:2) {
+        lambda[parent[b],d] += log(dot_product(P[d],exp(lambda[child[b]])));
+      }
     }
-    return log(.5*exp(lambda[parent[B],1]) + .5*exp(lambda[parent[B],2]));
+    return(log(.5*exp(lambda[parent[B],1]) + .5*exp(lambda[parent[B],2])));
   }
 }
 data {
@@ -197,7 +184,7 @@ data {
   int<lower=1> child[B];                //child of each branch
   int<lower=1> parent[B];               //parent of each branch
   real<lower=0> brlen[B];                //length of each branch
-  int<lower=0,upper=1> tiplik[T,2];     //likelihoods for data at tips in tree
+  matrix<lower=0,upper=1>[T,2] tiplik;     //likelihoods for data at tips in tree
 }
 parameters {
   real<lower=0> alpha;                           //gain rate
@@ -206,7 +193,7 @@ parameters {
 model {
   alpha ~ gamma(1,1);     //any priors defined on [0,inf) are possible
   beta ~ gamma(1,1);
-  target += pruning_likelihood(T,N,B,tiplik,parent,child,brlen,alpha,beta);
+  target += pruning_likelihood(T,N,B,child,parent,brlen,tiplik,alpha,beta);
 }"
 ```
 
@@ -228,7 +215,7 @@ print(fit)
 stan_hist(fit)
 ```
 
-It is clear that the gain rate (alpha) is much lower than the loss rate (beta), indicating that WH-V order is gained infrequently and lost frequently. We can convert the gain and loss rates into **waiting times**. The feature is gained roughly .25 times per millennium and lost roughly 1.5 times per millennium. Thus, if the feature is lost, we can expect to wait on average 1000/.25 = 4000 years before it is regained, and if it is gained, we can expect to wait on average 1000/1.5 = 666 years before it is lost again. In short, it seems to be highly dispreferred. 
+<!-- It is clear that the gain rate (alpha) is much lower than the loss rate (beta), indicating that WH-V order is gained infrequently and lost frequently. We can convert the gain and loss rates into **waiting times**. The feature is gained roughly .25 times per millennium and lost roughly 1.5 times per millennium. Thus, if the feature is lost, we can expect to wait on average 1000/.25 = 4000 years before it is regained, and if it is gained, we can expect to wait on average 1000/1.5 = 666 years before it is lost again. In short, it seems to be highly dispreferred. -->
 
 We can explore the distribution of possible character histories by means of **stochastic character mapping**. This approach reconstructs ancestral states for internal nodes of the tree and simulates changes on the basis of posterior rates, usually multiple times, then creates a pleasant color gradient over the tree.
 
@@ -274,4 +261,5 @@ class(newbl)<-"multiPhylo"
 densityMap(newbl,fsize=.5)
 ```
 
-According to the visualization, WH-V word order develops relatively late in the history of Indo-European, and is absent for millennia. When it does develop, we see a relatively small number of gains (e.g., it develops once in the Germanic languages), and appears to be lost in some languages as well (e.g., Tajik). This appears to bear out the result found in the rates: WH-V order arises infrequently and is lost with higher frequency than it is gained.
+According to the visualization, WH-V word order develops relatively late in the history of Indo-European, and is absent for millennia. When it does develop, we see a relatively small number of gains (e.g., it develops once in the Germanic languages), and appears to be lost in some languages as well (e.g., Tajik). 
+<!-- This appears to bear out the result found in the rates: WH-V order arises infrequently and is lost with higher frequency than it is gained. -->

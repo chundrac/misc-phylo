@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  20 OCT 2022 21:37
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  8 NOV 2022 13:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1444,75 +1444,76 @@ Package xcolor Warning: Incompatible color definition on input line 393.
 Package xcolor Warning: Incompatible color definition on input line 404.
 
 
-Package xcolor Warning: Incompatible color definition on input line 469.
+Package xcolor Warning: Incompatible color definition on input line 456.
 
 
-Package xcolor Warning: Incompatible color definition on input line 469.
+Package xcolor Warning: Incompatible color definition on input line 456.
 
 
-Underfull \vbox (badness 3148) detected at line 469
+Underfull \vbox (badness 3148) detected at line 456
  []
 
 
-Package xcolor Warning: Incompatible color definition on input line 469.
+Package xcolor Warning: Incompatible color definition on input line 456.
 
 [5]
 
-Package xcolor Warning: Incompatible color definition on input line 469.
+Package xcolor Warning: Incompatible color definition on input line 456.
 
 
-Package xcolor Warning: Incompatible color definition on input line 469.
+Package xcolor Warning: Incompatible color definition on input line 456.
 
 
-Package xcolor Warning: Incompatible color definition on input line 474.
+Package xcolor Warning: Incompatible color definition on input line 461.
 
 
-Package xcolor Warning: Incompatible color definition on input line 486.
+Package xcolor Warning: Incompatible color definition on input line 473.
 
 
-Package xcolor Warning: Incompatible color definition on input line 486.
+Package xcolor Warning: Incompatible color definition on input line 473.
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 589--589
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 576--576
 []\T1/lmtt/m/n/10 ## Chain 1: 1000 transitions using 10 leapfrog steps per tran
-sition would take 6.42 seconds.[] 
+sition would take 9.04 seconds.[] 
+ []
+
+
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 576--576
+[]\T1/lmtt/m/n/10 ## Chain 2: 1000 transitions using 10 leapfrog steps per tran
+sition would take 4.88 seconds.[] 
  []
 
 [6]
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 589--589
-[]\T1/lmtt/m/n/10 ## Chain 2: 1000 transitions using 10 leapfrog steps per tran
-sition would take 1.72 seconds.[] 
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 576--576
+[]\T1/lmtt/m/n/10 ## Chain 3: 1000 transitions using 10 leapfrog steps per tran
+sition would take 4.32 seconds.[] 
  []
 
 
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 589--589
-[]\T1/lmtt/m/n/10 ## Chain 3: 1000 transitions using 10 leapfrog steps per tran
-sition would take 1.72 seconds.[] 
+Overfull \hbox (13.24358pt too wide) in paragraph at lines 576--576
+[]\T1/lmtt/m/n/10 ## Chain 4: 1000 transitions using 10 leapfrog steps per tran
+sition would take 4.15 seconds.[] 
  []
 
 [7]
-Overfull \hbox (13.24358pt too wide) in paragraph at lines 589--589
-[]\T1/lmtt/m/n/10 ## Chain 4: 1000 transitions using 10 leapfrog steps per tran
-sition would take 1.37 seconds.[] 
- []
+
+Package xcolor Warning: Incompatible color definition on input line 578.
 
 
-Package xcolor Warning: Incompatible color definition on input line 591.
+Package xcolor Warning: Incompatible color definition on input line 582.
 
 
-Package xcolor Warning: Incompatible color definition on input line 595.
+Package xcolor Warning: Incompatible color definition on input line 582.
 
 
-Package xcolor Warning: Incompatible color definition on input line 595.
+Package xcolor Warning: Incompatible color definition on input line 600.
 
 
-Package xcolor Warning: Incompatible color definition on input line 613.
+Package xcolor Warning: Incompatible color definition on input line 604.
 
 
-Package xcolor Warning: Incompatible color definition on input line 617.
-
-
-Package xcolor Warning: Incompatible color definition on input line 617.
+Package xcolor Warning: Incompatible color definition on input line 604.
 
 
 <phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-11-1.pdf, id=
@@ -1522,50 +1523,40 @@ File: phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-11-1.pdf
 
 <use phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-11-1.pdf>
 Package pdftex.def Info: phylogenetic_inference_tutorial_files/figure-latex/unn
-amed-chunk-11-1.pdf used on input line 619.
+amed-chunk-11-1.pdf used on input line 606.
 (pdftex.def)             Requested size: 456.70512pt x 293.09427pt.
-[8]
-
-Package xcolor Warning: Incompatible color definition on input line 637.
-
-
-Package xcolor Warning: Incompatible color definition on input line 678.
-
-
-Package xcolor Warning: Incompatible color definition on input line 678.
-
-
-Package xcolor Warning: Incompatible color definition on input line 678.
-
-[9 <./phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-11-1.pdf
+[8 <./phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-11-1.pdf
 >]
 
-Package xcolor Warning: Incompatible color definition on input line 678.
+Package xcolor Warning: Incompatible color definition on input line 614.
 
 
-Package xcolor Warning: Incompatible color definition on input line 678.
+Package xcolor Warning: Incompatible color definition on input line 655.
+
+
+Package xcolor Warning: Incompatible color definition on input line 655.
 
 
 <phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-12-1.pdf, id=
-93, 427.5975pt x 298.11375pt>
+88, 427.5975pt x 298.11375pt>
 File: phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-12-1.pdf
  Graphic file (type pdf)
 
 <use phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-12-1.pdf>
 Package pdftex.def Info: phylogenetic_inference_tutorial_files/figure-latex/unn
-amed-chunk-12-1.pdf used on input line 680.
+amed-chunk-12-1.pdf used on input line 657.
 (pdftex.def)             Requested size: 427.59645pt x 298.11302pt.
-[10 <./phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-12-1.pd
-f>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 691.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 691.
+[9] [10 <./phylogenetic_inference_tutorial_files/figure-latex/unnamed-chunk-12-
+1.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 666.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 666.
 (./phylogenetic_inference_tutorial.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 691.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 691.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 666.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 666.
 Package rerunfilecheck Info: File `phylogenetic_inference_tutorial.out' has not
  changed.
 (rerunfilecheck)             Checksum: A62A134E58AF58F628E11448A59E4508;145.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 691.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 666.
  ) 
 Here is how much of TeX's memory you used:
  23822 strings out of 492995
@@ -1595,7 +1586,7 @@ nts/type1/public/lm/lmsy7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/p
 ublic/lm/lmtk10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/lm/l
 mtt10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/lm/lmtti10.pfb
 >
-Output written on phylogenetic_inference_tutorial.pdf (10 pages, 352810 bytes).
+Output written on phylogenetic_inference_tutorial.pdf (10 pages, 350329 bytes).
 
 PDF statistics:
  173 PDF objects out of 1000 (max. 8388607)
