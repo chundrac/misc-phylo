@@ -1,0 +1,218 @@
+---
+title: "OU_vs_BM"
+author: "chundra"
+date: "3/31/2025"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(phytools)
+require(rstan)
+require(ggplot2)
+```
+
+## Rationale
+
+Phylogenetic regression often assumes that the stochastic process that generates data in related languages is Brownian motion, when in reality there are multiple valid evolutionary processes that could be involved.
+
+This notebook contains preliminary simulation studies designed to investigate whether phylogenetic regression models infer misleading posterior coefficient distributions if the phylogenetic stochastic process is misspecified (specifically, if we assume BM when an Ornstein-Uhlenbeck process was used to generate the data).
+
+For several iterations, we generate synthetic OU data, and fit two phylogenetic regression models (assuming a BM and OU phylogenetic term, respectively) on the simulated data. We compare the posterior distributions of the effect of a synthetic predictor on a numeric response, along with the value used to generate the synthetic data.
+
+# Stan models
+
+```{r}
+model_BM = "data {
+  int<lower=1> D;
+  vector[D] x;
+  vector[D] y;
+  cov_matrix[D] phy;
+}
+parameters {
+  real theta;
+  real beta;
+  real<lower=0> sigma_phy;
+  real<lower=0> sigma;
+  vector[D] z;
+}
+transformed parameters {
+  vector[D] mu = theta + cholesky_decompose(phy*sigma_phy)*z + beta*x;
+}
+model {
+  theta ~ normal(0,1);
+  beta ~ normal(0,1);
+  sigma_phy ~ normal(0,1);
+  sigma ~ normal(0,1);
+  z ~ normal(0,1);
+  y ~ normal(mu,sigma);
+}"
+
+model_BM = "data {
+  int<lower=1> D;
+  vector[D] x;
+  vector[D] y;
+  cov_matrix[D] phy;
+}
+parameters {
+  real theta;
+  real beta;
+  real<lower=0> sigma_phy;
+  real<lower=0> sigma;
+  vector[D] z;
+}
+transformed parameters {
+  vector[D] mu = theta + cholesky_decompose(phy*sigma_phy)*z + beta*x;
+}
+model {
+  theta ~ normal(0,1);
+  beta ~ normal(0,1);
+  sigma_phy ~ normal(0,1);
+  sigma ~ normal(0,1);
+  z ~ normal(0,1);
+  y ~ normal(mu,sigma);
+}"
+
+model_OU = "data {
+  int<lower=1> D;
+  vector[D] x;
+  vector[D] y;
+  matrix[D,D] phy;
+}
+parameters {
+  real theta;
+  real<lower=0> alpha;
+  real beta;
+  real<lower=0> sigma_phy;
+  real<lower=0> sigma;
+  vector[D] z;
+}
+transformed parameters {
+  vector[D] mu = theta + cholesky_decompose(sigma_phy*exp(-.5*phy/alpha) + diag_matrix(rep_vector(.001,D)))*z + beta*x;
+}
+model {
+  theta ~ normal(0,1);
+  beta ~ normal(0,1);
+  sigma_phy ~ normal(0,1);
+  sigma ~ normal(0,1);
+  z ~ normal(0,1);
+  y ~ normal(mu,sigma);
+}"
+```
+
+# Simulations
+
+We generate synthetic data for a phylogenetic regression with an OU 20 times, and fit the above models. Naturally, there are many more dimensions to explore (e.g., propensity of different approaches for false positives/negatives), which we set aside for future work.
+
+```
+plots <- list()
+
+for (seed in 1:20) {
+  set.seed(seed)
+  D <- 50
+  tree <- rcoal(D)
+  alpha <- runif(1,0,5)
+  sigma <- runif(1,0,5)
+  theta <- rnorm(1,0,1)
+  beta <- rnorm(1,0,5)
+  x <- rnorm(50,0,1)
+  z <- rnorm(50,0,1)
+  coph.dist <- cophenetic.phylo(tree)
+  phy.cov <- vcv.phylo(tree)
+  psi <- sigma*exp(-.5*coph.dist/alpha) + diag(D)*.001
+  y <- theta + chol(psi)%*%z + beta*x + rnorm(D,0,1)
+  
+  data.list.BM <- list(
+    D = D,
+    x = x,
+    y = y[,1],
+    phy = phy.cov
+  )
+
+  fit.BM <- stan(model_code = model_BM, data = data.list.BM, chains = 1)
+
+  data.list.OU <- list(
+    D = D,
+    x = x,
+    y = y[,1],
+    phy = coph.dist
+  )
+
+  fit.OU <- stan(model_code = model_OU, data = data.list.OU, chains = 1)
+  
+  my.df <- data.frame( 
+    model = c(rep('BM',1000),rep('OU',1000)),
+    estimate = c(extract(fit.BM)$beta,extract(fit.OU)$beta)
+  )
+  
+  beta.true <- beta
+  
+  p <- ggplot(data=my.df) + 
+    geom_vline(aes(xintercept=beta.true)) + 
+    geom_histogram(aes(x=estimate,fill=model),alpha=.5) + 
+    scale_fill_manual(values=c('#E69F00','#56B4E9'))
+    
+  
+  plots[[seed]] <- p
+  
+}
+```
+
+```{r,include=F,message=F,warning=F}
+
+plots <- list()
+
+for (seed in 1:20) {
+  set.seed(seed)
+  D <- 50
+  tree <- rcoal(D)
+  alpha <- runif(1,0,5)
+  sigma <- runif(1,0,5)
+  theta <- rnorm(1,0,1)
+  beta <- rnorm(1,0,5)
+  x <- rnorm(50,0,1)
+  z <- rnorm(50,0,1)
+  coph.dist <- cophenetic.phylo(tree)
+  phy.cov <- vcv.phylo(tree)
+  psi <- sigma*exp(-.5*coph.dist/alpha) + diag(D)*.001
+  y <- theta + chol(psi)%*%z + beta*x + rnorm(D,0,1)
+  
+  data.list.BM <- list(
+    D = D,
+    x = x,
+    y = y[,1],
+    phy = phy.cov
+  )
+
+  fit.BM <- stan(model_code = model_BM, data = data.list.BM, chains = 1)
+
+  data.list.OU <- list(
+    D = D,
+    x = x,
+    y = y[,1],
+    phy = coph.dist
+  )
+
+  fit.OU <- stan(model_code = model_OU, data = data.list.OU, chains = 1)
+  
+  my.df <- data.frame( 
+    model = c(rep('BM',1000),rep('OU',1000)),
+    estimate = c(extract(fit.BM)$beta,extract(fit.OU)$beta)
+  )
+  
+  beta.true <- beta
+  
+  p <- ggplot(data=my.df) + 
+    geom_vline(aes(xintercept=beta.true)) + 
+    geom_histogram(aes(x=estimate,fill=model),alpha=.5) + 
+    scale_fill_manual(values=c('#E69F00','#56B4E9'))
+    
+  
+  plots[[seed]] <- p
+  
+}
+```
+
+```{r,message=F}
+plots
+```
